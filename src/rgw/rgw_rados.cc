@@ -12125,8 +12125,8 @@ int RGWRados::update_containers_stats(map<string, RGWBucketEnt>& m)
     if (r < 0)
       return r;
 
-    map<string, rgw_bucket_dir_header>::iterator hiter = headers.begin();
-    for (; hiter != headers.end(); ++hiter) {
+    map<string, rgw_bucket_dir_header>::iterator hiter;
+    for (hiter = headers.begin(); hiter != headers.end(); ++hiter) {
       RGWObjCategory category = main_category;
       map<uint8_t, struct rgw_bucket_category_stats>::iterator iter = (hiter->second.stats).find((uint8_t)category);
       if (iter != hiter->second.stats.end()) {

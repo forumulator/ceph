@@ -2975,12 +2975,21 @@ public:
         string delim;
         rgw_obj_key marker;
         rgw_obj_key end_marker;
-        string ns;
+        string ns; // namespace
         bool enforce_ns;
         RGWAccessListFilter *filter;
         bool list_versions;
 
         Params() : enforce_ns(true), filter(NULL), list_versions(false) {}
+        // This is a deep copy - allowed?
+        void copy(const RGWStore::ListBucketInfo &info) {
+          prefix = info.prefix;
+          delim = info.delim;
+          marker = info.marker; end_marker = info.end_marker;
+          ns = info.ns;
+          enforce_ns = info.enforce_ns;
+          filter = info.filter; list_versions = info.list_versions;
+        }
       } params;
 
     public:

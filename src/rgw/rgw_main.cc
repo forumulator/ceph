@@ -1,6 +1,10 @@
 // -*- mode:C++; tab-width:8; c-basic-offset:2; indent-tabs-mode:t -*-
 // vim: ts=8 sw=2 smarttab
 
+// This is currently defined here, but will
+// eventually come from compiler flags.
+#define RGW_STORE
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -338,9 +342,14 @@ int main(int argc, const char **argv)
   FCGX_Init();
 #endif
 
-  RGWRados *store = RGWStoreManager::get_storage(g_ceph_context,
+  RGWRados *store = nullptr;
+// Here goes the #ifdef else chain
+#ifdef RGW_STORE
+  store = RGWStoreManager::get_storage(g_ceph_context,
       g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads, g_conf->rgw_enable_quota_threads,
       g_conf->rgw_run_sync_thread, g_conf->rgw_dynamic_resharding);
+#endif
+
   if (!store) {
     mutex.Lock();
     init_timer.cancel_all_events();
