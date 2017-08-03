@@ -18,7 +18,7 @@ private:
   bool run_sync_thread, run_reshard_threads;
 
   // RGWCdobs *MakeCdobs();
-  RGWRados *make_rgw_rados();
+  RGWRadosStore *make_rgw_rados();
 public:
   RGWStoreFactory(CephContext *cct, bool use_gc_thread, 
                   bool use_lc_thread, bool quota_threads, bool run_sync_thread,

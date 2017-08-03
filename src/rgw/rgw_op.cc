@@ -2214,27 +2214,29 @@ void RGWListBucket::execute()
     map<string, RGWBucketEnt> m;
     m[s->bucket.name] = RGWBucketEnt();
     m.begin()->second.bucket = s->bucket;
-    op_ret = store->update_containers_stats(m);
+    op_ret = rgw_store->UpdateContainerStats(m);
     if (op_ret > 0) {
       bucket = m.begin()->second;
     }
   }
 
-  RGWRados::Bucket target(store, s->bucket_info);
+  RGWStore::Bucket target(store, s->bucket_info);
   if (shard_id >= 0) {
     target.set_shard_id(shard_id);
   }
-  RGWRados::Bucket::List list_op(&target);
 
-  list_op.params.prefix = prefix;
-  list_op.params.delim = delimiter;
-  list_op.params.marker = marker;
-  list_op.params.end_marker = end_marker;
-  list_op.params.list_versions = list_versions;
-
-  op_ret = list_op.list_objects(max, &objs, &common_prefixes, &is_truncated);
+  RGWStore::ListBucketInfo list_info;
+  
+  list_info.prefix = prefix;
+  list_info.delim = delimiter;
+  list_info.marker = marker;
+  list_info.end_marker = end_marker;
+  list_info.list_versions = list_versions;
+  
+  op_ret = rgw_store->ListBucket(&target, list_info, max, &objs,
+                                &common_prefixes, &is_truncated);
   if (op_ret >= 0) {
-    next_marker = list_op.get_next_marker();
+    next_marker = list_info.next_marker;
   }
 }
 

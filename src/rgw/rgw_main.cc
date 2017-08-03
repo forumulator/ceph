@@ -343,11 +343,14 @@ int main(int argc, const char **argv)
 #endif
 
   RGWRados *store = nullptr;
+  RGWStore *rgw_store = nullptr;
 // Here goes the #ifdef else chain
 #ifdef RGW_STORE
-  store = RGWStoreManager::get_storage(g_ceph_context,
-      g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads, g_conf->rgw_enable_quota_threads,
-      g_conf->rgw_run_sync_thread, g_conf->rgw_dynamic_resharding);
+  rgw_store = RGWStoreFactory(
+      _ceph_context, g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads,
+      g_conf->rgw_enable_quota_threads, g_conf->rgw_run_sync_thread, 
+      g_conf->rgw_dynamic_resharding).make_rgw_store(RADOS);
+  store = rgw_store->get_rados();
 #endif
 
   if (!store) {

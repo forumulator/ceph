@@ -2886,8 +2886,12 @@ public:
     int shard_id;
 
   public:
-    Bucket(RGWRados *_store, const RGWBucketInfo& _bucket_info) : store(_store), bucket_info(_bucket_info), bucket(bucket_info.bucket),
-                                                            shard_id(RGW_NO_SHARD) {}
+    Bucket(RGWRados *_store, const RGWBucketInfo& _bucket_info) : store(_store),
+        bucket_info(_bucket_info), bucket(bucket_info.bucket),
+        shard_id(RGW_NO_SHARD) {}
+    Bucket(RGWStore::Bucket &b) : store(b.store), bucket_info(b.bucket_info),
+        bucket(b.bucket), shard_id(b.shard_id) {}
+
     RGWRados *get_store() { return store; }
     rgw_bucket& get_bucket() { return bucket; }
     RGWBucketInfo& get_bucket_info() { return bucket_info; }
