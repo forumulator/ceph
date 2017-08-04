@@ -109,6 +109,7 @@ protected:
   struct req_state *s;
   RGWHandler *dialect_handler;
   RGWRados *store;
+  RGWStore *rgw_store;
   RGWCORSConfiguration bucket_cors;
   bool cors_exist;
   RGWQuotaInfo bucket_quota;
@@ -144,6 +145,14 @@ public:
     this->s = s;
     this->dialect_handler = dialect_handler;
   }
+
+  virtual void init(RGWRados *store, RGWStore *rgw_store, struct req_state *s, RGWHandler *dialect_handler) {
+    this->store = store;
+    this->rgw_store = rgw_store;
+    this->s = s;
+    this->dialect_handler = dialect_handler;
+  }
+
   int read_bucket_cors();
   bool generate_cors_headers(string& origin, string& method, string& headers, string& exp_headers, unsigned *max_age);
 

@@ -18,7 +18,7 @@ private:
   bool run_sync_thread, run_reshard_threads;
 
   // RGWCdobs *MakeCdobs();
-  RGWRadosStore *make_rgw_rados();
+  RGWRadosStorecd  *make_rgw_rados();
 public:
   RGWStoreFactory(CephContext *cct, bool use_gc_thread, 
                   bool use_lc_thread, bool quota_threads, bool run_sync_thread,
@@ -38,10 +38,25 @@ public:
  */
 class RGWStore {
 private:
+  RGWRealm realm;
+  RGWZoneGroup zonegroup;
+  RGWZone zone;
 
 public:
   virtual int UpdateContainerStats(map<string, RGWBucketEnt>& m) {
     return -1; // Return -ENIMP(not implemented)
+  }
+
+  virtual RGWRealm& get_realm() {
+    return realm;
+  }
+
+  virtual RGWZoneGroup& get_zonegroup() {
+    return zonegroup;
+  }
+
+  virtual RGWZone& get_zone() {
+    return zone;
   }
 
   /* For bucket ops ListBucket and UpdateIndex */

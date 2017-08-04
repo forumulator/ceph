@@ -1726,7 +1726,7 @@ int RGWRESTOp::verify_permission()
   return check_caps(s->user->caps);
 }
 
-RGWOp* RGWHandler_REST::get_op(RGWRados* store)
+RGWOp* RGWHandler_REST::get_op(RGWRados* store, RGWStore *rgw_store)
 {
   RGWOp *op;
   switch (s->op) {
@@ -1756,8 +1756,15 @@ RGWOp* RGWHandler_REST::get_op(RGWRados* store)
   }
 
   if (op) {
-    op->init(store, s, this);
+    // Change this to enum comparison
+    if (op->name() != "list_bucket") {
+      op->init(store, s, this);
+    }
+    else {
+      op->init(store, rgw_store, s, this);
+    }
   }
+
   return op;
 } /* get_op */
 
