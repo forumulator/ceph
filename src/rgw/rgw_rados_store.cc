@@ -2,7 +2,7 @@
 #include "rgw_store.h"
 #include "rgw_rados.h"
 
-int RGWRadosStore::init(RGWStore *_store) {
+int RGWRadosBackend::init(RGWRados *_store) {
   if (!_store) {
     return -1;
   }
@@ -10,11 +10,11 @@ int RGWRadosStore::init(RGWStore *_store) {
   return 0;
 }
 
-int RGWRadosStore::UpdateContainerStats(map<string, RGWBucketEnt>& m) {
+int RGWRadosBackend::UpdateContainerStats(map<string, RGWBucketEnt>& m) {
   return store->update_containers_stats(m);
 }
 
-int RGWRadosStore::ListBucket(RGWStore::Bucket *target, RGWStore::ListBucketInfo &info,
+int RGWRadosBackend::ListBucket(RGWBackend::Bucket *target, RGWBackend::ListBucketInfo &info,
                               int64_t max, vector<rgw_bucket_dir_entry> *result, 
                               map<string, bool> *common_prefixes, bool *is_truncated) {
   RGWRados::Bucket target(*target);
@@ -31,6 +31,6 @@ int RGWRadosStore::ListBucket(RGWStore::Bucket *target, RGWStore::ListBucketInfo
   return op_ret;
 }
 
-RGWStore *get_store() {
+RGWRados *get_store() {
   return store;
 }

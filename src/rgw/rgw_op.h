@@ -109,7 +109,7 @@ protected:
   struct req_state *s;
   RGWHandler *dialect_handler;
   RGWRados *store;
-  RGWStore *rgw_store;
+  RGWBackend *rgw_store;
   RGWCORSConfiguration bucket_cors;
   bool cors_exist;
   RGWQuotaInfo bucket_quota;
@@ -146,7 +146,7 @@ public:
     this->dialect_handler = dialect_handler;
   }
 
-  virtual void init(RGWRados *store, RGWStore *rgw_store, struct req_state *s, RGWHandler *dialect_handler) {
+  virtual void init(RGWRados *store, RGWBackend *rgw_store, struct req_state *s, RGWHandler *dialect_handler) {
     this->store = store;
     this->rgw_store = rgw_store;
     this->s = s;

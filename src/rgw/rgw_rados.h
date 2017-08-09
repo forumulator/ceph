@@ -2370,6 +2370,7 @@ public:
   librados::IoCtx* get_lc_pool_ctx() {
     return &lc_pool_ctx;
   }
+  
   void set_context(CephContext *_cct) {
     cct = _cct;
   }
@@ -2889,7 +2890,7 @@ public:
     Bucket(RGWRados *_store, const RGWBucketInfo& _bucket_info) : store(_store),
         bucket_info(_bucket_info), bucket(bucket_info.bucket),
         shard_id(RGW_NO_SHARD) {}
-    Bucket(RGWStore::Bucket &b) : store(b.store), bucket_info(b.bucket_info),
+    Bucket(RGWBackend::Bucket &b) : store(b.store), bucket_info(b.bucket_info),
         bucket(b.bucket), shard_id(b.shard_id) {}
 
     RGWRados *get_store() { return store; }
@@ -2986,7 +2987,7 @@ public:
 
         Params() : enforce_ns(true), filter(NULL), list_versions(false) {}
         // This is a deep copy - allowed?
-        void copy(const RGWStore::ListBucketInfo &info) {
+        void copy(const RGWBackend::ListBucketInfo &info) {
           prefix = info.prefix;
           delim = info.delim;
           marker = info.marker; end_marker = info.end_marker;

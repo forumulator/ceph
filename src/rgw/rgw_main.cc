@@ -343,14 +343,14 @@ int main(int argc, const char **argv)
 #endif
 
   RGWRados *store = nullptr;
-  RGWStore *rgw_store = nullptr;
+  RGWBackend *backend = nullptr;
 // Here goes the #ifdef else chain
 #ifdef RGW_STORE
-  rgw_store = RGWStoreFactory(
+  backend = RGWStoreFactory(
       _ceph_context, g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads,
       g_conf->rgw_enable_quota_threads, g_conf->rgw_run_sync_thread, 
-      g_conf->rgw_dynamic_resharding).make_rgw_store(RADOS);
-  store = rgw_store->get_rados();
+      g_conf->rgw_dynamic_resharding).make_rgw_backend(RADOS);
+  store = backend->get_rados();
 #endif
 
   if (!store) {
@@ -501,7 +501,7 @@ int main(int argc, const char **argv)
       std::string uri_prefix;
       config->get_val("prefix", "", &uri_prefix);
 
-      RGWProcessEnv env = { store, &rest, olog, 0, uri_prefix, auth_registry };
+      RGWProcessEnv env = { store, backend, &rest, olog, 0, uri_prefix, auth_registry };
 
       fe = new RGWCivetWebFrontend(env, config);
     }
@@ -511,7 +511,7 @@ int main(int argc, const char **argv)
       std::string uri_prefix;
       config->get_val("prefix", "", &uri_prefix);
 
-      RGWProcessEnv env = { store, &rest, olog, port, uri_prefix, auth_registry };
+      RGWProcessEnv env = { store, backend, &rest, olog, port, uri_prefix, auth_registry };
 
       fe = new RGWLoadGenFrontend(env, config);
     }
@@ -522,7 +522,7 @@ int main(int argc, const char **argv)
       config->get_val("port", 80, &port);
       std::string uri_prefix;
       config->get_val("prefix", "", &uri_prefix);
-      RGWProcessEnv env{ store, &rest, olog, port, uri_prefix, auth_registry };
+      RGWProcessEnv env{ store, backend, &rest, olog, port, uri_prefix, auth_registry };
       fe = new RGWAsioFrontend(env);
     }
 #endif /* WITH_RADOSGW_BEAST_FRONTEND */
@@ -531,7 +531,7 @@ int main(int argc, const char **argv)
       framework = "fastcgi";
       std::string uri_prefix;
       config->get_val("prefix", "", &uri_prefix);
-      RGWProcessEnv fcgi_pe = { store, &rest, olog, 0, uri_prefix, auth_registry };
+      RGWProcessEnv fcgi_pe = { store, backend, &rest, olog, 0, uri_prefix, auth_registry };
 
       fe = new RGWFCGXFrontend(fcgi_pe, config);
     }

@@ -7,9 +7,9 @@ enum BackendType {
 }
 
 
-/* RGWStore factory. Has private functions for init of 
+/* RGWBackend factory. Has private functions for init of 
  * each backend and one public function that returns an
- * instance of RGWStore
+ * instance of RGWBackend
  */
 class RGWStoreFactory {
 private:
@@ -18,7 +18,7 @@ private:
   bool run_sync_thread, run_reshard_threads;
 
   // RGWCdobs *MakeCdobs();
-  RGWRadosStorecd  *make_rgw_rados();
+  RGWRadosBackend *make_rgw_rados();
 public:
   RGWStoreFactory(CephContext *cct, bool use_gc_thread, 
                   bool use_lc_thread, bool quota_threads, bool run_sync_thread,
@@ -28,21 +28,27 @@ public:
       run_reshard_thread(run_reshard_thread) {}
 
   // Can't change the existing interface of RGWStoreManager, hence all the args.
-  RGWStore *make_rgw_store(int backend_type);
+  RGWBackend *make_rgw_backend(int backend_type);
 }
 
 /* 
- * The abstract class RGWStore. Handles backend storage for 
+ * The abstract class RGWBackend. Handles backend storage for 
  * Amazon S3/ Apache Swift type buckets and objects for RGW.
  * To add an alternative backend, subclass this class.
  */
-class RGWStore {
+class RGWBackend {
 private:
   RGWRealm realm;
   RGWZoneGroup zonegroup;
   RGWZone zone;
 
+  std::atomic<int64_t> max_req_id = { 0 };
+
 public:
+  virtual uint64_t get_new_req_id() {
+    return ++max_req_id;
+  }
+
   virtual int UpdateContainerStats(map<string, RGWBucketEnt>& m) {
     return -1; // Return -ENIMP(not implemented)
   }
@@ -97,7 +103,7 @@ public:
     Params() : enforce_ns(true), filter(NULL), list_versions(false) {}
   };
 
-  virtual int ListBucket(RGWStore::Bucket *target, RGWStore::ListBucketInfo &info,
+  virtual int ListBucket(RGWBackend::Bucket *target, RGWBackend::ListBucketInfo &info,
                         int64_t max, vector<rgw_bucket_dir_entry> *result, 
                         map<string, bool> *common_prefixes, bool *is_truncated);
 

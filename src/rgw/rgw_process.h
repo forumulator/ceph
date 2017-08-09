@@ -30,6 +30,7 @@ extern void signal_shutdown();
 
 struct RGWProcessEnv {
   RGWRados *store;
+  RGWBackend *backend;
   RGWREST *rest;
   OpsLogSocket *olog;
   int port;
@@ -44,6 +45,7 @@ class RGWProcess {
 protected:
   CephContext *cct;
   RGWRados* store;
+  RGWBackend *backend;
   rgw_auth_registry_ptr_t auth_registry;
   OpsLogSocket* olog;
   ThreadPool m_tp;
@@ -109,6 +111,7 @@ public:
              RGWFrontendConfig* const conf)
     : cct(cct),
       store(pe->store),
+      backend(pe->backend),
       auth_registry(pe->auth_registry),
       olog(pe->olog),
       m_tp(cct, "RGWProcess::m_tp", "tp_rgw_process", num_threads),
@@ -191,6 +194,7 @@ public:
 
 /* process stream request */
 extern int process_request(RGWRados* store,
+                           RGWBackend *backend,
                            RGWREST* rest,
                            RGWRequest* req,
                            const std::string& frontend_prefix,

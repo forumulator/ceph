@@ -1726,7 +1726,7 @@ int RGWRESTOp::verify_permission()
   return check_caps(s->user->caps);
 }
 
-RGWOp* RGWHandler_REST::get_op(RGWRados* store, RGWStore *rgw_store)
+RGWOp* RGWHandler_REST::get_op(RGWRados* store, RGWBackend *rgw_backend)
 {
   RGWOp *op;
   switch (s->op) {
@@ -1761,7 +1761,7 @@ RGWOp* RGWHandler_REST::get_op(RGWRados* store, RGWStore *rgw_store)
       op->init(store, s, this);
     }
     else {
-      op->init(store, rgw_store, s, this);
+      op->init(store, rgw_backend, s, this);
     }
   }
 

@@ -1,19 +1,23 @@
 #include "rgw_store.h"
 
 
-class RGWRadosStore : public RGWStore {
+class RGWRadosBackend : public RGWBackend {
 private:
   RGWRados *store;
 
 public:
-  RGWRadosStore() {}
+  RGWRadosBackend() {}
 
-  int init(RGWStore *_store);
+  uint64_t get_new_req_id() {
+    return store->get_new_req_id();
+  }
+
+  int init(RGWBackend *_store);
 
   int UpdateContainerStats(map<string, RGWBucketEnt>& m);
-  int ListBucket(RGWStore::Bucket *target, RGWStore::ListBucketInfo &info,
+  int ListBucket(RGWBackend::Bucket *target, RGWBackend::ListBucketInfo &info,
                 int64_t max, vector<rgw_bucket_dir_entry> *result, 
                 map<string, bool> *common_prefixes, bool *is_truncated);
 
-  RGWStore *get_store();
+  RGWRados *get_store();
 }

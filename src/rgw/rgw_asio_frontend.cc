@@ -116,7 +116,7 @@ static void handle_connection(RGWProcessEnv& env, tcp::socket socket,
                                 rgw::io::add_conlen_controlling(
                                   &real_client))));
     RGWRestfulIO client(&real_client_io);
-    process_request(env.store, env.rest, &req, env.uri_prefix,
+    process_request(env.store, env.backend, env.rest, &req, env.uri_prefix,
                     *env.auth_registry, &client, env.olog);
 
     if (real_client.get_conn_close()) {

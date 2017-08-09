@@ -110,7 +110,7 @@ int rgw_process_authenticated(RGWHandler_REST * const handler,
 }
 
 int process_request(RGWRados* const store,
-                    RGWStore* const rgw_store,
+                    RGWBackend* const backend,
                     RGWREST* const rest,
                     RGWRequest* const req,
                     const std::string& frontend_prefix,
@@ -161,7 +161,7 @@ int process_request(RGWRados* const store,
   should_log = mgr->get_logging();
 
   req->log_format(s, "getting op %d", s->op);
-  op = handler->get_op(store, rgw_store);
+  op = handler->get_op(store, backend);
   if (!op) {
     abort_early(s, NULL, -ERR_METHOD_NOT_ALLOWED, handler);
     goto done;

@@ -508,7 +508,7 @@ public:
   int init_permissions(RGWOp* op) override;
   int read_permissions(RGWOp* op) override;
 
-  virtual RGWOp* get_op(RGWRados* store);
+  virtual RGWOp* get_op(RGWRados* store, RGWBackend *rgw_backend);
   virtual void put_op(RGWOp* op);
 };
 
