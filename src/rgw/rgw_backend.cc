@@ -12,7 +12,7 @@ RGWRadosBackend *RGWStoreFactory::make_rgw_rados() {
     return rgw_backend;
   }
   else {
-    delete rgw_backend;
+    // delete rgw_backend;
     return NULL;
   }
 }

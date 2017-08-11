@@ -18,13 +18,12 @@ enum BackendType {
  * To add an alternative backend, subclass this class.
  */
 class RGWBackend {
-private:
+protected:
   RGWRealm realm;
   RGWZoneGroup zonegroup;
   RGWZone zone;
 
   std::atomic<int64_t> max_req_id = { 0 };
-
 public:
   RGWBackend() {}
   virtual uint64_t get_new_req_id() {
@@ -87,8 +86,8 @@ public:
 
   virtual int ListBucket(RGWBackend::Bucket *target, RGWBackend::ListBucketInfo &info,
                         int64_t max, vector<rgw_bucket_dir_entry> *result, 
-                        map<string, bool> *common_prefixes, bool *is_truncated);
-  virtual ~RGWBackend() = default;
+                        map<string, bool> *common_prefixes, bool *is_truncated) = 0;
+  ~RGWBackend() {};
 };
 
 class CephContext;
