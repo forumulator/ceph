@@ -479,12 +479,15 @@ namespace rgw {
 
     rgw_init_resolver();
 
-    store = RGWStoreManager::get_storage(g_ceph_context,
-					 g_conf->rgw_enable_gc_threads,
-					 g_conf->rgw_enable_lc_threads,
-					 g_conf->rgw_enable_quota_threads,
-					 g_conf->rgw_run_sync_thread,
-					 g_conf->rgw_dynamic_resharding);
+    backend = RGWStoreFactory(
+        g_ceph_context,
+        g_conf->rgw_enable_gc_threads,
+        g_conf->rgw_enable_lc_threads,
+        g_conf->rgw_enable_quota_threads,
+        g_conf->rgw_run_sync_thread, 
+        g_conf->rgw_dynamic_resharding).make_rgw_backend(RADOS);
+    
+    store = ((RGWRadosBackend *)backend)->get_rados();
 
     if (!store) {
       mutex.Lock();
@@ -533,7 +536,7 @@ namespace rgw {
     }
 
     int port = 80;
-    RGWProcessEnv env = { store, &rest, olog, port };
+    RGWProcessEnv env = { store, backend, &rest, olog, port };
 
     string fe_count{"0"};
     fec = new RGWFrontendConfig("rgwlib");

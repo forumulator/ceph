@@ -88,7 +88,7 @@ public:
   virtual int ListBucket(RGWBackend::Bucket *target, RGWBackend::ListBucketInfo &info,
                         int64_t max, vector<rgw_bucket_dir_entry> *result, 
                         map<string, bool> *common_prefixes, bool *is_truncated);
-  virtual ~RGWBackend() = 0;
+  virtual ~RGWBackend() = default;
 };
 
 class CephContext;

@@ -29,10 +29,11 @@ namespace rgw {
     rgw::LDAPHelper* ldh{nullptr};
     RGWREST rest; // XXX needed for RGWProcessEnv
     RGWRados* store;
+    RGWBackend *backend;
     boost::intrusive_ptr<CephContext> cct;
 
   public:
-    RGWLib() : fec(nullptr), fe(nullptr), olog(nullptr), store(nullptr)
+    RGWLib() : fec(nullptr), fe(nullptr), olog(nullptr), store(nullptr), backend(nullptr)
       {}
     ~RGWLib() {}
 

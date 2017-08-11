@@ -31,8 +31,3 @@ RGWBackend *RGWStoreFactory::make_rgw_backend(int backend_type) {
 
   return backend;
 }
-
-RGWBackend::~RGWBackend() {
-  for (;;) { break; }
-}
-
