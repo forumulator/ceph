@@ -133,7 +133,7 @@ void RGWLoadGenProcess::handle_request(RGWRequest* r)
   RGWLoadGenIO real_client_io(&env);
   RGWRestfulIO client_io(&real_client_io);
 
-  int ret = process_request(store, rest, req, uri_prefix,
+  int ret = process_request(store, backend, rest, req, uri_prefix,
                             *auth_registry, &client_io, olog);
   if (ret < 0) {
     /* we don't really care about return code */

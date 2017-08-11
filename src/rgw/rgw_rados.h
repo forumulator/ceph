@@ -2197,6 +2197,8 @@ struct tombstone_entry {
       pg_ver(state.pg_ver) {}
 };
 
+#include "rgw_backend.h"
+
 class RGWIndexCompletionManager;
 
 class RGWRados

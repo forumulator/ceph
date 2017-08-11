@@ -1,16 +1,18 @@
 #include "rgw_rados.h"
+#include "rgw_backend.h"
+#include "rgw_rados_backend.h"
 
 RGWRadosBackend *RGWStoreFactory::make_rgw_rados() {
   RGWRados *store = RGWStoreManager::get_storage(
-      cct, bool use_gc_thread, bool use_lc_thread, 
-      bool quota_threads, bool run_sync_thread,
-      bool run_reshard_thread);
-  RGWRadosBackend *rgw_store = new RGWRadosBackend();
-  if (!rgw_store->init(store)) {
-    return rgw_store;
+      cct, use_gc_thread, use_lc_thread, 
+      quota_threads, run_sync_thread,
+      run_reshard_thread);
+  RGWRadosBackend *rgw_backend = new RGWRadosBackend();
+  if (!rgw_backend->init(store)) {
+    return rgw_backend;
   }
   else {
-    delete rgw_store;
+    delete rgw_backend;
     return NULL;
   }
 }
@@ -23,11 +25,14 @@ RGWBackend *RGWStoreFactory::make_rgw_backend(int backend_type) {
       backend = make_rgw_rados();
       break;
     default:
-      derr << "Invalid backend_type";
+      // cerr << "Invalid backend_type";
       backend = nullptr;
   }
 
   return backend;
 }
 
+RGWBackend::~RGWBackend() {
+  
+}
 

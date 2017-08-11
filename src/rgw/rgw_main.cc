@@ -33,6 +33,8 @@
 #include "include/stringify.h"
 #include "rgw_common.h"
 #include "rgw_rados.h"
+#include "rgw_backend.h"
+#include "rgw_rados_backend.h"
 #include "rgw_user.h"
 #include "rgw_period_pusher.h"
 #include "rgw_realm_reloader.h"
@@ -347,10 +349,10 @@ int main(int argc, const char **argv)
 // Here goes the #ifdef else chain
 #ifdef RGW_STORE
   backend = RGWStoreFactory(
-      _ceph_context, g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads,
+      g_ceph_context, g_conf->rgw_enable_gc_threads, g_conf->rgw_enable_lc_threads,
       g_conf->rgw_enable_quota_threads, g_conf->rgw_run_sync_thread, 
       g_conf->rgw_dynamic_resharding).make_rgw_backend(RADOS);
-  store = backend->get_rados();
+  store = ((RGWRadosBackend *)backend)->get_rados();
 #endif
 
   if (!store) {

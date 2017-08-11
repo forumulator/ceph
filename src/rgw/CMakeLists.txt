@@ -46,6 +46,7 @@ set(rgw_a_srcs
   rgw_auth_keystone.cc
   rgw_auth_s3.cc
   rgw_basic_types.cc
+  rgw_backend.cc
   rgw_bucket.cc
   rgw_cache.cc
   rgw_client_io.cc
@@ -91,6 +92,7 @@ set(rgw_a_srcs
   rgw_process.cc
   rgw_quota.cc
   rgw_rados.cc
+  rgw_rados_backend.cc
   rgw_replica_log.cc
   rgw_request.cc
   rgw_resolve.cc
